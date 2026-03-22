@@ -1,130 +1,203 @@
+// FeaturedCoffeeProducts.jsx
+import React from "react";
+import { Tabs, Card, Button, Space, Typography } from "antd";
+import { ShoppingCartOutlined, ArrowRightOutlined } from "@ant-design/icons";
+
+const { Title, Text, Paragraph } = Typography;
+
+const products = [
+  {
+    key: "1",
+    name: "Espresso Dark Roast",
+    description:
+      "Bold and intense dark roast perfect for espresso. Sourced from organic farms in Palpa district.",
+    image: "/images/coffee-beans-bowl.jpg", // replace with real paths or URLs
+    category: "beans",
+  },
+  {
+    key: "2",
+    name: "Coffee Grinder",
+    description:
+      "Grinder perfect for small-batch fresh grinding. Durable cast iron body.",
+    image: "/images/coffee-grinder.jpg",
+    category: "tools",
+  },
+  {
+    key: "3",
+    name: "Roasted Beans",
+    description:
+      "Hand-roasted single origin beans from the highlands of Gulmi. Medium roast with notes of chocolate and citrus.",
+    image: "/images/roasted-coffee-beans.jpg",
+    category: "beans",
+  },
+  {
+    key: "4",
+    name: "Green Coffee Beans",
+    description:
+      "Unroasted specialty-grade green beans. Perfect for home roasting or wholesale buyers. 1kg pack.",
+    image: "/images/green-coffee-cherries.jpg",
+    category: "beans",
+  },
+];
+
 export default function ProductShowcase() {
-  const products = [
+  const items = [
     {
-      name: "Espresso Dark Roast",
-      description:
-        "Bold and intense dark roast perfect for espresso. Sourced from organic farms in Palpa district.",
-      image: "coffee-beans-bowl.jpg", // replace with real path or URL
+      key: "all",
+      label: "All Products",
+      children: <ProductGrid products={products} />,
     },
     {
-      name: "Coffee Grinder",
-      description:
-        "Grinder perfect for small-batch fresh grinding. Durable cast iron body.",
-      image: "coffee-grinder.jpg",
+      key: "beans",
+      label: "Coffee Beans",
+      children: (
+        <ProductGrid
+          products={products.filter((p) => p.category === "beans")}
+        />
+      ),
     },
     {
-      name: "Roasted Beans",
-      description:
-        "Hand-roasted single origin beans from the highlands of Gulmi. Medium roast with notes of chocolate and citrus.",
-      image: "roasted-coffee-beans.jpg",
-    },
-    {
-      name: "Green Coffee Beans",
-      description:
-        "Unroasted specialty-grade green beans. Perfect for home roasting or wholesale buyers. 1kg pack.",
-      image: "green-coffee-cherries.jpg",
+      key: "tools",
+      label: "Tools",
+      children: (
+        <ProductGrid
+          products={products.filter((p) => p.category === "tools")}
+        />
+      ),
     },
   ];
 
   return (
-    <section className="py-16 px-5 md:px-10 lg:px-16 bg-gradient-to-b from-stone-50 to-white">
-      <div className="max-w-7xl mx-auto">
+    <div
+      style={{
+        padding: "64px 24px",
+        background: "linear-gradient(to bottom, #f9fafb, #ffffff)",
+      }}
+    >
+      <div style={{ maxWidth: 1400, margin: "0 auto" }}>
         {/* Header */}
-        <div className="text-center mb-14">
-          <span className="inline-block px-4 py-1.5 rounded-full bg-amber-100 text-amber-800 text-sm font-medium tracking-wide uppercase mb-4">
+        <div style={{ textAlign: "center", marginBottom: 48 }}>
+          <Text
+            strong
+            style={{
+              background: "#fef3c7",
+              color: "#92400e",
+              padding: "6px 16px",
+              borderRadius: 9999,
+              fontSize: 14,
+              textTransform: "uppercase",
+              letterSpacing: 1,
+            }}
+          >
             Featured Products
-          </span>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Discover Local
-            <span className="text-emerald-700"> Coffee Products</span>
-          </h2>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
+          </Text>
+
+          <Title level={2} style={{ margin: "16px 0 8px", color: "#111827" }}>
+            Discover Local{" "}
+            <span style={{ color: "#15803d" }}>Coffee Products</span>
+          </Title>
+
+          <Text
+            type="secondary"
+            style={{
+              fontSize: 18,
+              maxWidth: 700,
+              display: "block",
+              margin: "0 auto",
+            }}
+          >
             Explore Finished Coffee Products and Farming Tools From Verified
             Nepali Vendors.
-          </p>
+          </Text>
         </div>
 
-        {/* Category buttons */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12">
-          <button className="px-6 py-3 bg-emerald-700 text-white font-medium rounded-lg hover:bg-emerald-800 transition-colors shadow-sm">
-            All Products
-          </button>
-          <button className="px-6 py-3 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
-            Coffee Beans
-          </button>
-          <button className="px-6 py-3 bg-white text-gray-700 font-medium rounded-lg border border-gray-300 hover:bg-gray-50 transition-colors">
-            Tools
-          </button>
-        </div>
+        {/* Tabs */}
+        <Tabs
+          centered
+          items={items}
+          size="large" // makes tabs reasonably sized (not huge)
+          tabBarStyle={{ marginBottom: 40 }}
+          destroyInactiveTabPane // optional: better performance
+        />
 
-        {/* Products grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          {products.map((product, idx) => (
-            <div
-              key={idx}
-              className="group bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition-all duration-300 border border-gray-100 flex flex-col h-full"
-            >
-              <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-stone-100 to-stone-50">
-                {/* You can replace with next/image or img */}
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                />
-              </div>
-
-              <div className="p-6 flex flex-col flex-grow">
-                <h3 className="text-xl font-semibold text-gray-900 mb-3">
-                  {product.name}
-                </h3>
-                <p className="text-gray-600 text-sm leading-relaxed mb-6 flex-grow">
-                  {product.description}
-                </p>
-
-                <button className="mt-auto w-full py-3 px-6 bg-emerald-700 hover:bg-emerald-800 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm">
-                  <svg
-                    className="w-5 h-5"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                    />
-                  </svg>
-                  Buy Now
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-
-        {/* View all */}
-        <div className="text-center mt-14">
-          <a
-            href="#"
-            className="inline-flex items-center gap-2 px-8 py-4 bg-emerald-700 hover:bg-emerald-800 text-white font-medium rounded-xl transition-colors shadow-md hover:shadow-lg text-lg"
+        {/* View All Button */}
+        <div style={{ textAlign: "center", marginTop: 56 }}>
+          <Button
+            type="primary"
+            size="large" // slightly bigger for CTA, but still standard
+            icon={<ArrowRightOutlined />}
+            style={{
+              height: 48,
+              fontSize: 16,
+              background: "#15803d",
+              borderColor: "#15803d",
+            }}
           >
             View All Products
-            <svg
-              className="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M17 8l4 4m0 0l-4 4m4-4H3"
-              />
-            </svg>
-          </a>
+          </Button>
         </div>
       </div>
-    </section>
+    </div>
+  );
+}
+
+function ProductGrid({ products }) {
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
+        gap: 24,
+      }}
+    >
+      {products.map((product) => (
+        <Card
+          key={product.key}
+          hoverable
+          cover={
+            <div style={{ height: 220, overflow: "hidden" }}>
+              <img
+                alt={product.name}
+                src={product.image}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  objectFit: "cover",
+                  transition: "transform 0.4s",
+                }}
+                className="hover:scale-105"
+              />
+            </div>
+          }
+          bodyStyle={{ padding: 20 }}
+          style={{ borderRadius: 12, border: "1px solid #e5e7eb" }}
+        >
+          <Title level={4} style={{ margin: "0 0 12px" }}>
+            {product.name}
+          </Title>
+
+          <Paragraph
+            type="secondary"
+            style={{ marginBottom: 24, minHeight: 60 }}
+          >
+            {product.description}
+          </Paragraph>
+
+          <Button
+            type="primary"
+            icon={<ShoppingCartOutlined />}
+            block
+            style={{
+              background: "#15803d",
+              borderColor: "#15803d",
+              height: 42,
+              fontWeight: 500,
+            }}
+          >
+            Buy Now
+          </Button>
+        </Card>
+      ))}
+    </div>
   );
 }
