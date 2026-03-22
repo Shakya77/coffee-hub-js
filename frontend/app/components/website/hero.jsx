@@ -1,67 +1,71 @@
 "use client";
 
-import { Button, Card, Divider, Flex, Typography } from "antd";
+import { Button, Card, Divider, Typography } from "antd";
 
 const { Title } = Typography;
 
 export default function Hero() {
   return (
     <main className="bg-white">
-      <section className=" mx-auto max-w-7xl px-4 py-18" id="hero">
-        <Flex gap={18}>
-          <Flex direction="" gap={20} align="start" vertical>
-            <p>Built for farmers, organomists, workers and vendors</p>
-            <p className="text-5xl font-extrabold w-xl">
+      <section className="mx-auto max-w-7xl px-4 py-10 sm:py-14" id="hero">
+        <div className="flex flex-col gap-10 lg:flex-row lg:items-start">
+          <div className="flex flex-col gap-5">
+            <p className="text-sm sm:text-base">
+              Built for farmers, organomists, workers and vendors
+            </p>
+            <p className="max-w-2xl text-3xl font-extrabold sm:text-4xl lg:text-5xl">
               A smarter coffee platform for
               <span className="text-secondary block"> farming guidance,</span>
               jobs, and local product discovery.
             </p>
-            <p className="text-xl">
+            <p className="max-w-2xl text-base sm:text-lg lg:text-xl">
               Your trusted digital companion for coffee cultivation in Nepal.
               Connect with experts, identify diseases, find workers, and
               discover local coffee products - all in one place.
             </p>
-            <Flex gap={8}>
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
               <Button>Explore Platform</Button>
               <Button>Learn More</Button>
-            </Flex>
+            </div>
 
-            <Flex align="center" justify="center" gap={8}>
-              <div style={{ textAlign: "center" }}>
-                <h2>100+</h2>
-                <p>Farmers Joined</p>
+            <div className="flex flex-wrap items-center gap-6">
+              <div className="text-center">
+                <h2 className="text-2xl font-semibold">100+</h2>
+                <p className="text-sm sm:text-base">Farmers Joined</p>
               </div>
 
               <Divider
                 orientation="vertical"
                 style={{ height: "50px", borderColor: "#7cb305" }}
+                className="hidden sm:block"
               />
 
-              <div style={{ textAlign: "center" }}>
-                <h2>150+</h2>
-                <p>Jobs Posted</p>
+              <div className="text-center">
+                <h2 className="text-2xl font-semibold">150+</h2>
+                <p className="text-sm sm:text-base">Jobs Posted</p>
               </div>
 
               <Divider
                 orientation="vertical"
                 style={{ height: "50px", borderColor: "#7cb305" }}
+                className="hidden sm:block"
               />
 
-              <div style={{ textAlign: "center" }}>
-                <h2>50+</h2>
-                <p>Expert Blogs</p>
+              <div className="text-center">
+                <h2 className="text-2xl font-semibold">50+</h2>
+                <p className="text-sm sm:text-base">Expert Blogs</p>
               </div>
-            </Flex>
-          </Flex>
+            </div>
+          </div>
 
-          <Card size="medium">
-            <Flex>
+          <Card size="medium" className="w-full lg:max-w-md">
+            <div>
               <Title level={4}>
                 Everything farmers need, in one calm and simple experience.
               </Title>
-            </Flex>
+            </div>
           </Card>
-        </Flex>
+        </div>
       </section>
     </main>
   );

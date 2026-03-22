@@ -1,10 +1,16 @@
-import React from "react";
-import Hero from "../components/website/hero";
+"use client";
 
-export default function page() {
+import Hero from "../components/website/hero";
+import WhatWeOffer from "../components/website/whatWeOffer";
+import ProductShowcase from "../components/website/productShowcase";
+
+
+export default function Page() {
   return (
     <>
       <Hero />
+      <WhatWeOffer />
+      <ProductShowcase />
     </>
   );
 }
