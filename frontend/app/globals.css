@@ -1,3 +1,28 @@
 @import "tailwindcss";
 
 @custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    @apply bg-cream text-forest;
+  }
+}
+
+@theme {
+  /* Colors */
+  --color-primary: #3f5b3a;
+  --color-secondary: #c98650;
+  --color-cream: #f7f4ef;
+  --color-sand: #efe6d8;
+  --color-forest: #2d3f2a;
+  --color-moss: #5c6e55;
+  --color-earth: #5b3a2e;
+  --color-olive: #6a7a4c;
+
+  /* Fonts */
+  --font-sans: var(--font-manrope), system-ui, sans-serif;
+  --font-display: var(--font-fraunces), serif;
+
+  /* Shadows */
+  --shadow-soft: 0 20px 60px -30px rgba(45, 63, 42, 0.45);
+}
