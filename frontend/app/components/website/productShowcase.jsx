@@ -117,7 +117,7 @@ export default function ProductShowcase() {
           items={items}
           size="large" // makes tabs reasonably sized (not huge)
           tabBarStyle={{ marginBottom: 40 }}
-          destroyInactiveTabPane // optional: better performance
+          destroyOnHidden // optional: better performance
         />
 
         {/* View All Button */}
@@ -127,8 +127,8 @@ export default function ProductShowcase() {
             size="large" // slightly bigger for CTA, but still standard
             icon={<ArrowRightOutlined />}
             style={{
-              height: 48,
-              fontSize: 16,
+              height: 40,
+              fontSize: 14,
               background: "#15803d",
               borderColor: "#15803d",
             }}
@@ -143,13 +143,7 @@ export default function ProductShowcase() {
 
 function ProductGrid({ products }) {
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(auto-fill, minmax(280px, 1fr))",
-        gap: 24,
-      }}
-    >
+    <div className="grid grid-cols-4 gap-4">
       {products.map((product) => (
         <Card
           key={product.key}
@@ -169,7 +163,7 @@ function ProductGrid({ products }) {
               />
             </div>
           }
-          bodyStyle={{ padding: 20 }}
+          styles={{ padding: 20 }}
           style={{ borderRadius: 12, border: "1px solid #e5e7eb" }}
         >
           <Title level={4} style={{ margin: "0 0 12px" }}>
@@ -190,7 +184,7 @@ function ProductGrid({ products }) {
             style={{
               background: "#15803d",
               borderColor: "#15803d",
-              height: 42,
+              height: 38,
               fontWeight: 500,
             }}
           >
