@@ -1,23 +1,36 @@
 "use client";
 
-import { Card, Form, Input, Typography } from "antd";
+import { Button, Card, Form, Input, Typography } from "antd";
+import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
 
-export default function FormPage() {
+export default function FormPage({ type, path }) {
+  const onFinish = (values) => {};
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <Card className="w-full max-w-md shadow-xl rounded-2xl">
         <Title level={3} className="text-center mb-6">
-          Login
+          {type === "login" ? "Login" : "Register"}
         </Title>
 
         <Form
-          name="login"
+          name={type}
           initialValues={{ remember: true }}
           onFinish={onFinish}
           layout="vertical"
         >
+          {type === "register" ? (
+            <Form.Item
+              name="name"
+              label="Name"
+              rules={[{ required: true, message: "Please input your name!" }]}
+            >
+              <Input prefix={<UserOutlined />} placeholder="Name" />
+            </Form.Item>
+          ) : null}
+
           <Form.Item
             name="email"
             label="Email"
@@ -40,11 +53,13 @@ export default function FormPage() {
               htmlType="submit"
               className="w-full rounded-lg h-10"
             >
-              Log in
+              {type === "login" ? "Log in" : "Sign up"}
             </Button>
           </Form.Item>
         </Form>
       </Card>
     </div>
   );
+
+  
 }
