@@ -1,5 +1,5 @@
-import FormPage from "@/components/login/FormPage";
+import RegisterForm from "@/components/register/RegisterForm";
 
 export default function page() {
-  return <FormPage type="register" path="/register" />;
+  return <RegisterForm />;
 }

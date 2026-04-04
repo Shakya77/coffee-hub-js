@@ -1,9 +1,52 @@
 "use client";
 
-import { Button, Card, Form, Input, Typography } from "antd";
+import { Button, Card, Form, Input, Tabs, Typography } from "antd";
 import { UserOutlined, LockOutlined } from "@ant-design/icons";
 
 const { Title } = Typography;
+
+const onChange = (key) => {
+  console.log(key);
+};
+
+const VendorComponent = () => {
+  return (
+    <Form.Item
+      name="contactNumber"
+      label="Contact Number"
+      rules={[{ required: true, message: "Please input your contact number!" }]}
+    >
+      <Input prefix={<UserOutlined />} placeholder="Whatsapp business Number" />
+    </Form.Item>
+  );
+};
+
+const items = [
+  {
+    key: "1",
+    label: "Farmer",
+    children: (
+      <Form.Item
+        name="contactNumber"
+        label="Contact Number"
+        rules={[
+          { required: true, message: "Please input your contact number!" },
+        ]}
+      >
+        <Input prefix={<UserOutlined />} placeholder="Contact Number" />
+      </Form.Item>
+    ),
+  },
+  {
+    key: "2",
+    label: "Vendor",
+    children: <VendorComponent />,
+  },
+];
+
+export const RoleTab = () => {
+  return <Tabs defaultActiveKey="1" items={items} onChange={onChange} />;
+};
 
 export default function FormPage({ type, path }) {
   const onFinish = (values) => {};
@@ -29,6 +72,12 @@ export default function FormPage({ type, path }) {
             >
               <Input prefix={<UserOutlined />} placeholder="Name" />
             </Form.Item>
+          ) : null}
+
+          {type === "register" ? (
+            <>
+              <RoleTab />
+            </>
           ) : null}
 
           <Form.Item
@@ -60,6 +109,4 @@ export default function FormPage({ type, path }) {
       </Card>
     </div>
   );
-
-  
 }

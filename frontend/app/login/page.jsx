@@ -1,7 +1,7 @@
-import FormPage from "@/components/login/FormPage";
+import LoginForm from "@/components/login/LoginForm";
 
 const LoginPage = () => {
-  return <FormPage type="login" path="/login" />;
+  return <LoginForm />;
 };
 
 export default LoginPage;
