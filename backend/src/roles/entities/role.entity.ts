@@ -1,5 +1,12 @@
 import { Column, DataType, Model, Table } from 'sequelize-typescript';
 
+export enum Roles {
+  ADMIN = 'admin',
+  AGRONOMIST = 'agronomist',
+  VENDOR = 'vendor',
+  FARMER = 'farmer',
+}
+
 @Table({
   tableName: 'roles',
   paranoid: true,

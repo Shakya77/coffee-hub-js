@@ -10,6 +10,13 @@ export class UsersService {
     private userRepository: typeof User,
   ) {}
 
+  async findOneEmail(email: string) {
+    return await this.userRepository.findOne({
+      where: { email: email },
+      include: ['userHasRoles'],
+    });
+  }
+
   async create(createUserDto: CreateUserDto) {
     const checkMail = await this.userRepository.findOne({
       where: { email: createUserDto.email },

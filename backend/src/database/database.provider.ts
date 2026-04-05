@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize-typescript';
-import { Role } from 'src/users/entities/role.entity';
-import { UserHasRoles } from 'src/users/entities/user-has-roles.entity';
+import { Role } from 'src/roles/entities/role.entity';
+import { UserHasRole } from 'src/user-has-roles/entities/user-has-role.entity';
 import { User } from 'src/users/entities/user.entity';
 
 export const databaseProviders = [
@@ -16,7 +16,7 @@ export const databaseProviders = [
         database: 'coffee_hub',
       });
 
-      sequelize.addModels([User, Role, UserHasRoles]);
+      sequelize.addModels([User, Role, UserHasRole]);
 
       await sequelize.sync();
       return sequelize;

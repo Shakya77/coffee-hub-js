@@ -1,10 +1,14 @@
 import {
   Column,
   DataType,
+  HasMany,
   Model,
   PrimaryKey,
   Table,
 } from 'sequelize-typescript';
+import { UserHasRole } from 'src/user-has-roles/entities/user-has-role.entity';
+
+
 
 @Table({
   tableName: 'users',
@@ -35,6 +39,13 @@ export class User extends Model<User> {
   @Column({
     type: DataType.STRING,
     allowNull: false,
+    unique: true,
+  })
+  slug: string;
+
+  @Column({
+    type: DataType.STRING,
+    allowNull: false,
   })
   password: string;
 
@@ -49,4 +60,7 @@ export class User extends Model<User> {
     allowNull: true,
   })
   verifiedAt?: Date;
+
+  @HasMany(() => UserHasRole)
+  userHasRoles: UserHasRole[];
 }

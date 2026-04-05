@@ -1,26 +1,45 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { CreateUserHasRoleDto } from './dto/create-user-has-role.dto';
 import { UpdateUserHasRoleDto } from './dto/update-user-has-role.dto';
+import { USER_HAS_ROLES_REPOSITORY } from '../../constants';
+import { UserHasRole } from './entities/user-has-role.entity';
 
 @Injectable()
 export class UserHasRolesService {
-  create(createUserHasRoleDto: CreateUserHasRoleDto) {
-    return 'This action adds a new userHasRole';
+  constructor(
+    @Inject(USER_HAS_ROLES_REPOSITORY)
+    private userHasRolesRepository: typeof UserHasRole,
+  ) {}
+
+  async create(createUserHasRoleDto: CreateUserHasRoleDto) {
+    const data = await this.userHasRolesRepository.create(
+      createUserHasRoleDto as any as UserHasRole,
+    );
+
+    return data;
   }
 
-  findAll() {
-    return `This action returns all userHasRoles`;
+  async findAll() {
+    return await this.userHasRolesRepository.findAll();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} userHasRole`;
+  async findOne(id: number) {
+    return await this.userHasRolesRepository.findByPk(id);
   }
 
-  update(id: number, updateUserHasRoleDto: UpdateUserHasRoleDto) {
-    return `This action updates a #${id} userHasRole`;
+  async update(id: number, updateUserHasRoleDto: UpdateUserHasRoleDto) {
+    const userHasRole = await this.userHasRolesRepository.findByPk(id);
+    if (!userHasRole) {
+      throw new Error('UserHasRole not found');
+    }
+    return await userHasRole.update(updateUserHasRoleDto as any as UserHasRole);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} userHasRole`;
+  async remove(id: number) {
+    const userHasRole = await this.userHasRolesRepository.findByPk(id);
+    if (!userHasRole) {
+      throw new Error('UserHasRole not found');
+    }
+    return await userHasRole.destroy();
   }
 }
