@@ -1,0 +1,42 @@
+@baseUrl = http://localhost:3000
+
+### create role - admin
+POST {{baseUrl}}/users/role
+Content-Type: application/json
+
+{
+    "name": "admin",
+    "slug": "admin",
+    "description": "System administrator responsible for managing users, roles, content moderation, and ensuring the smooth operation of the Coffee Info Hub platform."
+}
+
+### create role - agronomist
+POST {{baseUrl}}/users/role
+Content-Type: application/json
+
+{
+    "name": "agronomist",
+    "slug": "agronomist",
+    "description": "Agricultural expert who provides verified guidance on coffee cultivation, disease management, soil health, and sustainable farming practices to support farmers."
+}
+
+### create role - vendor
+POST {{baseUrl}}/users/role
+Content-Type: application/json
+
+{
+    "name": "vendor",
+    "slug": "vendor",
+    "description": "Skilled or unskilled agricultural worker who can view and apply for farming tasks such as pruning, harvesting, cutting, and other short-term labor opportunities posted by farmers."
+}
+
+### create role - farmer
+POST {{baseUrl}}/users/role
+Content-Type: application/json
+
+{
+    "name": "farmer",
+    "slug": "farmer",
+    "description": "Coffee farmer who accesses expert knowledge, views informational content, and posts recruitment requests for agricultural tasks to improve farm productivity."
+}
+

@@ -156,6 +156,7 @@ export default function RegisterForm() {
             <Form.Item
               name="role"
               label="Role"
+              initialValue="farmer"
               rules={[{ required: true, message: "Please select your role" }]}
             >
               <Select
