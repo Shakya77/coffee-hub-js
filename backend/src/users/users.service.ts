@@ -1,4 +1,10 @@
-import { Inject, Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Inject,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
@@ -11,9 +17,13 @@ import {
 import { UserHasRole } from 'src/user-has-roles/entities/user-has-role.entity';
 import slugify from 'slugify';
 import { Role } from 'src/roles/entities/role.entity';
+import { Sequelize } from 'sequelize-typescript';
 @Injectable()
 export class UsersService {
   constructor(
+    @Inject('SEQUELIZE')
+    private readonly sequelize: Sequelize,
+
     @Inject(USER_REPOSITORY)
     private userRepository: typeof User,
 
@@ -27,39 +37,67 @@ export class UsersService {
   async findOneEmail(email: string) {
     return await this.userRepository.findOne({
       where: { email: email },
-      include: ['userHasRoles'],
+      include: [
+        {
+          association: 'userHasRoles',
+          include: ['role'],
+        },
+      ],
     });
   }
 
   async create(createUserDto: CreateUserDto) {
-    const checkMail = await this.userRepository.findOne({
-      where: { email: createUserDto.email },
+    return await this.sequelize.transaction(async (transaction) => {
+      const checkMail = await this.userRepository.findOne({
+        where: { email: createUserDto.email },
+        transaction,
+      });
+
+      if (checkMail) {
+        throw new ConflictException('Email already exists');
+      }
+
+      const role = await this.rolesRepository.findOne({
+        where: { slug: createUserDto.role, isActive: true },
+        transaction,
+      });
+
+      if (!role) {
+        throw new NotFoundException('Invalid or inactive role');
+      }
+
+      const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+
+      const userData = {
+        name: createUserDto.name,
+        email: createUserDto.email,
+        password: hashedPassword,
+        slug: slugify(createUserDto.name),
+        isActive: createUserDto.isActive ?? true,
+        verifiedAt: createUserDto.verifiedAt,
+      };
+
+      const user = await this.userRepository.create(userData as User, {
+        transaction,
+      });
+
+      if (!user?.id) {
+        throw new BadRequestException('Unable to create user');
+      }
+
+      await this.userHasRolesRepository.create(
+        {
+          userId: user.id,
+          roleId: role.id,
+          contactNumber: createUserDto.contactNumber,
+          businessName: createUserDto.businessName,
+          businessType: createUserDto.businessType,
+        } as UserHasRole,
+        { transaction },
+      );
+
+      return user;
     });
-
-    if (checkMail) {
-      throw new Error('Email already exists');
-    }
-
-    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-
-    const userData = {
-      ...createUserDto,
-      password: hashedPassword,
-      slug: slugify(createUserDto.name),
-    };
-
-    const user = this.userRepository.create(userData as any as User);
-
-    const role = (await this.rolesRepository.findOne({
-      where: { slug: createUserDto.role },
-    })) as Role;
-
-    const userHasRole = this.userHasRolesRepository.create({
-      userId: user as any,
-      roleId: role.id as any,
-    } as any as UserHasRole);
-
-    return user;
   }
 
   async findAll() {

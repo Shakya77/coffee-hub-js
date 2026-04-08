@@ -1,6 +1,7 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
+import { AuthProvider } from "@/context/AuthContext";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -17,7 +18,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" className={`${poppins.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col font-sans">
-        <AntdRegistry>{children}</AntdRegistry>
+        <AuthProvider>
+          <AntdRegistry>{children}</AntdRegistry>
+        </AuthProvider>
       </body>
     </html>
   );

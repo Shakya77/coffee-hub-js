@@ -14,12 +14,21 @@ export class CreateUserDto {
   password: string;
 
   @IsDate()
-  verifiedAt: Date;
+  verifiedAt?: Date;
 
   @IsBoolean()
-  isActive: boolean;
+  isActive?: boolean;
 
   @IsString()
   @IsNotEmpty()
   role: string;
+
+  @IsString()
+  contactNumber?: string;
+
+  @IsString()
+  businessType?: string;
+
+  @IsString()
+  businessName?: string;
 }

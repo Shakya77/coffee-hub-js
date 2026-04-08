@@ -18,6 +18,7 @@ export class UserHasRole extends Model<UserHasRole> {
   @PrimaryKey
   @Column({
     type: DataType.INTEGER,
+    autoIncrement: true,
     primaryKey: true,
   })
   id: number;

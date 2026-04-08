@@ -1,13 +1,93 @@
 @baseUrl = http://localhost:3000
+@authToken = paste_jwt_token_here
 
-#### create user
+### register admin user
 POST {{baseUrl}}/auth/register
 Content-Type: application/json
 
 {
+    "name": "Admin User",
     "email": "admin@coffeehub.com",
-    "password": "admin",
-    "name": "Admin",
+    "password": "admin123",
     "isActive": true,
     "role": "admin"
 }
+
+### register farmer user
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "name": "Farmer One",
+    "email": "farmer1@coffeehub.com",
+    "password": "farmer123",
+    "isActive": true,
+    "role": "farmer",
+    "contactNumber": "+251911000111"
+}
+
+### register vendor user with role details
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "name": "Vendor One",
+    "email": "vendor1@coffeehub.com",
+    "password": "vendor123",
+    "isActive": true,
+    "role": "vendor",
+    "contactNumber": "+251922000222",
+    "businessType": "Roastery",
+    "businessName": "Coffee Hub Roasters"
+}
+
+### register agronomist user
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "name": "Agronomist One",
+    "email": "agro1@coffeehub.com",
+    "password": "agro123",
+    "isActive": true,
+    "role": "agronomist"
+}
+
+### login user (copy access_token into @authToken)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+    "email": "admin@coffeehub.com",
+    "password": "admin123"
+}
+
+### get auth profile
+GET {{baseUrl}}/auth/profile
+Authorization: Bearer {{authToken}}
+
+### get auth role
+GET {{baseUrl}}/auth/role
+Authorization: Bearer {{authToken}}
+
+### get all users
+GET {{baseUrl}}/users
+Authorization: Bearer {{authToken}}
+
+### get user by id
+GET {{baseUrl}}/users/1
+Authorization: Bearer {{authToken}}
+
+### update user by id
+PATCH {{baseUrl}}/users/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+    "name": "Admin User Updated",
+    "isActive": true
+}
+
+### delete user by id
+DELETE {{baseUrl}}/users/1
+Authorization: Bearer {{authToken}}

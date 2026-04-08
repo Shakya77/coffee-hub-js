@@ -3,18 +3,44 @@
 import Link from "next/link";
 import { Button, Card, Form, Input, Typography, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
+import api from "@/lib/api";
+import { dashboardForRole, useAuth } from "@/context/AuthContext";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Loader from "../Loader";
 
 const { Title, Text } = Typography;
 const inputIconStyle = { marginInlineEnd: 6 };
 
 export default function LoginForm() {
+  const router = useRouter();
+  const { login } = useAuth();
   const [form] = Form.useForm();
+  const [loading, setLoading] = useState(false);
 
-  const onFinish = (values) => {
-    message.success("Login form submitted");
-    console.log("Login payload:", values);
-    form.resetFields(["password"]);
+  const onFinish = async (values) => {
+    setLoading(true);
+    try {
+      const { data } = await api.post("/auth/login", values);
+
+      if (data?.access_token) {
+        const decoded = login(data.access_token);
+        const role = decoded?.role;
+        router.push(dashboardForRole(role, decoded?.slug));
+      } else {
+        router.push("/");
+      }
+
+      message.success("Welcome back!");
+      form.resetFields();
+    } catch (err) {
+      message.error(err?.response?.data?.message || err.message);
+    } finally {
+      setLoading(false);
+    }
   };
+
+  if (loading) return <Loader />;
 
   return (
     <section className="min-h-screen bg-linear-to-b from-sand via-cream to-sand px-4 py-8 sm:py-12">
