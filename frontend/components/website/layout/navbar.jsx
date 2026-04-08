@@ -1,3 +1,4 @@
+import Link from "next/link";
 import WebLogo from "./logo";
 
 const navItems = [
@@ -16,26 +17,24 @@ export default function Navbar() {
         <WebLogo />
         <div className="hidden items-center gap-8 text-base font-medium text-forest md:flex">
           {navItems.map((item) => (
-            <a
+            <Link
               key={item.href}
               href={item.href}
               className="transition-colors hover:text-primary hover:font-semibold hover:underline hover:underline-offset-8"
             >
               {item.label}
-            </a>
+            </Link>
           ))}
         </div>
         <div className="flex items-center gap-3">
-          <button
-            type="button"
+          <Link
+            href="/login"
             className="rounded-full bg-primary px-6 py-2 text-sm font-semibold text-white transition-colors hover:bg-forest"
           >
             Get Started
-          </button>
+          </Link>
         </div>
       </div>
     </nav>
   );
 }
-
-
