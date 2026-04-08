@@ -7,6 +7,8 @@ import React, {
   useMemo,
   useState,
 } from "react";
+import api from "@/lib/api";
+import { getDashboardRoleConfig } from "@/constants/dashboard-config";
 
 const AuthContext = createContext(null);
 
@@ -23,53 +25,162 @@ function decodeToken(token) {
   }
 }
 
+function rolesFromToken(decoded) {
+  if (!decoded) return [];
+
+  const tokenRoles = Array.isArray(decoded.roles)
+    ? decoded.roles
+    : decoded.role
+      ? [decoded.role]
+      : [];
+
+  const uniqueTokenRoles = [...new Set(tokenRoles.filter(Boolean))];
+  return uniqueTokenRoles.map((slug) => ({
+    slug,
+    name: getDashboardRoleConfig(slug).label,
+  }));
+}
+
 export function dashboardForRole(role, _slug) {
-  if (role === "admin") return "/admin";
-  if (role === "agronomist") return "/argonomist";
-  if (role === "staff") return "/staff";
-  if (role === "farmer" || role === "vendor" || role === "user") {
-    return "/";
-  }
-  return "/";
+  return role === "admin" ? "/admin" : "/dashboard";
 }
 
 export function AuthProvider({ children }) {
   const [token, setToken] = useState(null);
   const [user, setUser] = useState(null);
+  const [roles, setRoles] = useState([]);
+  const [activeRole, setActiveRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const storedToken = localStorage.getItem("token");
-    const decoded = decodeToken(storedToken);
-    setToken(storedToken);
-    setUser(decoded);
-    setLoading(false);
+    const initializeAuth = async () => {
+      const storedToken = localStorage.getItem("token");
+      const storedActiveRole = localStorage.getItem("activeRole");
+      const decoded = decodeToken(storedToken);
+      const decodedRoles = rolesFromToken(decoded);
+
+      setToken(storedToken);
+      setUser(decoded);
+      setRoles(decodedRoles);
+
+      if (!storedToken) {
+        setRoles([]);
+        setActiveRole(null);
+        setLoading(false);
+        return;
+      }
+
+      try {
+        const { data } = await api.get("/auth/roles");
+        const fetchedRoles = data?.roles ?? [];
+        setRoles(fetchedRoles.length > 0 ? fetchedRoles : decodedRoles);
+
+        const sourceRoles =
+          fetchedRoles.length > 0 ? fetchedRoles : decodedRoles;
+        const roleExists = sourceRoles.some(
+          (roleItem) => roleItem.slug === storedActiveRole,
+        );
+        const nextRole =
+          (roleExists && storedActiveRole) ||
+          decoded?.role ||
+          decoded?.roles?.[0] ||
+          sourceRoles[0]?.slug ||
+          null;
+
+        setActiveRole(nextRole);
+
+        if (nextRole) {
+          localStorage.setItem("activeRole", nextRole);
+        }
+      } catch {
+        const fallbackRole =
+          storedActiveRole || decoded?.role || decoded?.roles?.[0] || null;
+        setRoles(
+          decodedRoles.length > 0
+            ? decodedRoles
+            : fallbackRole
+              ? [
+                  {
+                    slug: fallbackRole,
+                    name: getDashboardRoleConfig(fallbackRole).label,
+                  },
+                ]
+              : [],
+        );
+        setActiveRole(fallbackRole);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    initializeAuth();
   }, []);
 
-  const login = (newToken) => {
+  const login = async (newToken) => {
     if (!newToken) return null;
     localStorage.setItem("token", newToken);
     const decoded = decodeToken(newToken);
+    const decodedRoles = rolesFromToken(decoded);
     setToken(newToken);
     setUser(decoded);
+    setRoles(decodedRoles);
+    const initialRole =
+      decoded?.role || decoded?.roles?.[0] || decodedRoles[0]?.slug;
+    setActiveRole(initialRole);
+    if (initialRole) {
+      localStorage.setItem("activeRole", initialRole);
+    }
+
+    try {
+      const { data } = await api.get("/auth/roles");
+      const fetchedRoles = data?.roles ?? [];
+      if (fetchedRoles.length > 0) {
+        setRoles(fetchedRoles);
+
+        const roleExists = fetchedRoles.some(
+          (roleItem) => roleItem.slug === initialRole,
+        );
+        const nextRole =
+          (roleExists && initialRole) || fetchedRoles[0]?.slug || initialRole;
+
+        setActiveRole(nextRole);
+        if (nextRole) {
+          localStorage.setItem("activeRole", nextRole);
+        }
+      }
+    } catch (err) {
+      console.error("Failed to fetch user roles:", err);
+    }
+
     return decoded;
+  };
+
+  const switchRole = (roleSlug) => {
+    setActiveRole(roleSlug);
+    localStorage.setItem("activeRole", roleSlug);
   };
 
   const logout = () => {
     localStorage.removeItem("token");
+    localStorage.removeItem("activeRole");
     setToken(null);
     setUser(null);
+    setRoles([]);
+    setActiveRole(null);
   };
 
   const value = useMemo(
     () => ({
       token,
       user,
+      roles,
+      activeRole,
       loading,
       login,
       logout,
+      switchRole,
     }),
-    [token, user, loading],
+    [token, user, roles, activeRole, loading],
   );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

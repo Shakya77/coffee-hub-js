@@ -1,5 +1,5 @@
 @baseUrl = http://localhost:3000
-@authToken = paste_jwt_token_here
+@authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGNvZmZlZWh1Yi5jb20iLCJpZCI6MSwic2x1ZyI6IkFkbWluLVVzZXIiLCJyb2xlIjoiZmFybWVyIiwicm9sZXMiOlsiZmFybWVyIiwidmVuZG9yIl0sImlhdCI6MTc3NTY3MTEwMH0.ZU8ML0B0G2FxzlVbH9OU4FlD4nDb3lyy4at3itxb234
 
 ### register admin user
 POST {{baseUrl}}/auth/register
@@ -53,6 +53,31 @@ Content-Type: application/json
     "role": "agronomist"
 }
 
+### register base user for multi-role assignment
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+    "name": "Multi Role User",
+    "email": "multi@coffeehub.com",
+    "password": "multi123",
+    "isActive": true,
+    "role": "farmer",
+    "contactNumber": "+251933000333"
+}
+
+### assign vendor role to the same user
+# Replace these ids with the actual user id and vendor role id from your database.
+POST {{baseUrl}}/user-has-roles
+Content-Type: application/json
+
+{
+    "userId": 1,
+    "roleId": 3,
+    "businessType": "Roastery",
+    "businessName": "Multi Role Coffee"
+}
+
 ### login user (copy access_token into @authToken)
 POST {{baseUrl}}/auth/login
 Content-Type: application/json
@@ -68,6 +93,10 @@ Authorization: Bearer {{authToken}}
 
 ### get auth role
 GET {{baseUrl}}/auth/role
+Authorization: Bearer {{authToken}}
+
+### get all user roles (for multi-role switching)
+GET {{baseUrl}}/auth/roles
 Authorization: Bearer {{authToken}}
 
 ### get all users

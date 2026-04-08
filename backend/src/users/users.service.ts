@@ -101,7 +101,9 @@ export class UsersService {
   }
 
   async findAll() {
-    const data = await this.userRepository.findAll();
+    const data = await this.userRepository.findAll({
+      include: ['userHasRoles'],
+    });
 
     return data;
   }

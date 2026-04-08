@@ -34,7 +34,7 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('profile')
-  getProfile(@Request() req, @UserRole() role: string) {
+  async getProfile(@Request() req, @UserRole() role: string) {
     return {
       ...req.user,
       role,
@@ -43,8 +43,14 @@ export class AuthController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('role')
-  getRole(@UserRole() role: string) {
+  getRole(@UserRole() role) {
     return { role };
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('roles')
+  async getRoles(@Request() req) {
+    return this.authService.getUserRoles(req.user.id);
   }
 
   @AllowedRoles(Roles.ADMIN)

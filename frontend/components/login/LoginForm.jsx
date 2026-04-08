@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Button, Card, Form, Input, Typography, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import api from "@/lib/api";
-import { dashboardForRole, useAuth } from "@/context/AuthContext";
+import { useAuth } from "@/context/AuthContext";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "../Loader";
@@ -24,15 +24,15 @@ export default function LoginForm() {
       const { data } = await api.post("/auth/login", values);
 
       if (data?.access_token) {
-        const decoded = login(data.access_token);
-        const role = decoded?.role;
-        router.push(dashboardForRole(role, decoded?.slug));
+        const decoded = await login(data.access_token);
+        if (decoded) {
+          message.success("Welcome back!");
+          form.resetFields();
+          router.push("/dashboard");
+        }
       } else {
         router.push("/");
       }
-
-      message.success("Welcome back!");
-      form.resetFields();
     } catch (err) {
       message.error(err?.response?.data?.message || err.message);
     } finally {
