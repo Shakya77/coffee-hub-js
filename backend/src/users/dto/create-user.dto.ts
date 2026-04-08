@@ -3,7 +3,7 @@ import { IsBoolean, IsDate, IsNotEmpty, IsString } from 'class-validator';
 export class CreateUserDto {
   @IsString()
   @IsNotEmpty()
-  username: string;
+  name: string;
 
   @IsString()
   @IsNotEmpty()
@@ -18,4 +18,8 @@ export class CreateUserDto {
 
   @IsBoolean()
   isActive: boolean;
+
+  @IsString()
+  @IsNotEmpty()
+  role: string;
 }

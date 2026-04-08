@@ -1,8 +1,4 @@
-import {
-  ROLE_REPOSITORY,
-  USER_REPOSITORY,
-  USER_HAS_ROLES_REPOSITORY,
-} from '../../constants';
+import { USER_REPOSITORY } from '../../constants';
 import { User } from './entities/user.entity';
 
 export const usersProviders = [

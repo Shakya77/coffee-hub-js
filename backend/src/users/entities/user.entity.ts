@@ -8,8 +8,6 @@ import {
 } from 'sequelize-typescript';
 import { UserHasRole } from 'src/user-has-roles/entities/user-has-role.entity';
 
-
-
 @Table({
   tableName: 'users',
   paranoid: true,

@@ -3,11 +3,25 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcryptjs';
+import {
+  ROLES_REPOSITORY,
+  USER_HAS_ROLES_REPOSITORY,
+  USER_REPOSITORY,
+} from '../../constants';
+import { UserHasRole } from 'src/user-has-roles/entities/user-has-role.entity';
+import slugify from 'slugify';
+import { Role } from 'src/roles/entities/role.entity';
 @Injectable()
 export class UsersService {
   constructor(
-    @Inject('USER_REPOSITORY')
+    @Inject(USER_REPOSITORY)
     private userRepository: typeof User,
+
+    @Inject(USER_HAS_ROLES_REPOSITORY)
+    private userHasRolesRepository: typeof UserHasRole,
+
+    @Inject(ROLES_REPOSITORY)
+    private rolesRepository: typeof Role,
   ) {}
 
   async findOneEmail(email: string) {
@@ -31,9 +45,19 @@ export class UsersService {
     const userData = {
       ...createUserDto,
       password: hashedPassword,
+      slug: slugify(createUserDto.name),
     };
 
     const user = this.userRepository.create(userData as any as User);
+
+    const role = (await this.rolesRepository.findOne({
+      where: { slug: createUserDto.role },
+    })) as Role;
+
+    const userHasRole = this.userHasRolesRepository.create({
+      userId: user as any,
+      roleId: role.id as any,
+    } as any as UserHasRole);
 
     return user;
   }

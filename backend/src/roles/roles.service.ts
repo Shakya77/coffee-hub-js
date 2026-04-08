@@ -2,12 +2,12 @@ import { Inject, Injectable } from '@nestjs/common';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import { Role } from './entities/role.entity';
-import { ROLE_REPOSITORY } from '../../constants';
+import { ROLES_REPOSITORY } from '../../constants';
 
 @Injectable()
 export class RolesService {
   constructor(
-    @Inject(ROLE_REPOSITORY)
+    @Inject(ROLES_REPOSITORY)
     private roleRepository: typeof Role,
   ) {}
 
