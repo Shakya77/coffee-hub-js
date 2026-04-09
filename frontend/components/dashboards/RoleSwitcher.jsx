@@ -26,11 +26,7 @@ export function RoleSwitcher() {
       trigger={["click"]}
       placement="bottomRight"
     >
-      <Button
-        icon={<SwapOutlined />}
-        type="primary"
-        className="capitalize"
-      >
+      <Button icon={<SwapOutlined />} type="primary" className="capitalize">
         Switch Role
       </Button>
     </Dropdown>

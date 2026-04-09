@@ -9,6 +9,7 @@ import { jwtConstants } from '../../constants';
 import { RolesGuard } from './guards/roles.guard';
 import { JwtAuthGuard } from './guards/jwt.guard';
 import { UserHasRolesModule } from 'src/user-has-roles/user-has-roles.module';
+import { AuditLogsModule } from 'src/audit-logs/audit-logs.module';
 
 @Module({
   imports: [
@@ -18,9 +19,10 @@ import { UserHasRolesModule } from 'src/user-has-roles/user-has-roles.module';
       secret: jwtConstants,
     }),
     UserHasRolesModule,
+    AuditLogsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy, JwtAuthGuard, RolesGuard],
-  exports: [AuthService, PassportModule],
+  exports: [AuthService, PassportModule, JwtAuthGuard, RolesGuard],
 })
 export class AuthModule {}

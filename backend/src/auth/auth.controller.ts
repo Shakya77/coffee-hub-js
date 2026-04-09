@@ -23,8 +23,11 @@ export class AuthController {
   ) {}
 
   @Post('login')
-  async login(@Body() loginDto: CreateUserDto) {
-    return this.authService.login(loginDto);
+  async login(@Body() loginDto: CreateUserDto, @Request() req) {
+    const ipAddress =
+      req.ip || req.connection.remoteAddress || req.socket.remoteAddress;
+    const userAgent = req.headers['user-agent'];
+    return this.authService.login(loginDto, ipAddress, userAgent);
   }
 
   @Post('/register')

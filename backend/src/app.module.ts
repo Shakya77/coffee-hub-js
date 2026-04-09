@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
@@ -16,6 +17,10 @@ import { BlogHasFilesModule } from './blog-has-files/blog-has-files.module';
 import { JobPortalsModule } from './job-portals/job-portals.module';
 import { JobSeekersModule } from './job-seekers/job-seekers.module';
 import { DiseasesModule } from './diseases/diseases.module';
+import { AuditLogsModule } from './audit-logs/audit-logs.module';
+import { JwtAuthGuard } from './auth/guards/jwt.guard';
+import { RolesGuard } from './auth/guards/roles.guard';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 @Module({
   imports: [
@@ -34,8 +39,23 @@ import { DiseasesModule } from './diseases/diseases.module';
     JobPortalsModule,
     JobSeekersModule,
     DiseasesModule,
+    AuditLogsModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: RolesGuard,
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: LoggingInterceptor,
+    },
+  ],
 })
 export class AppModule {}

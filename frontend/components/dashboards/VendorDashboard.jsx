@@ -101,9 +101,7 @@ export function VendorDashboard() {
                 <p className="text-xs text-moss">
                   Completed: {dashboardConfig.stats[2]?.value || "42"} tasks
                 </p>
-                <p className="text-xs text-moss">
-                  Rating: ⭐⭐⭐⭐⭐
-                </p>
+                <p className="text-xs text-moss">Rating: ⭐⭐⭐⭐⭐</p>
               </div>
             </Card>
           </Col>

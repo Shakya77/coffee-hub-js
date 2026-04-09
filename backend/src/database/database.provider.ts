@@ -12,6 +12,7 @@ import { TagUsed } from 'src/tag-used/entities/tag-used.entity';
 import { Tag } from 'src/tags/entities/tag.entity';
 import { UserHasRole } from 'src/user-has-roles/entities/user-has-role.entity';
 import { User } from 'src/users/entities/user.entity';
+import { AuditLog } from 'src/audit-logs/entities/audit-log.entity';
 
 export const databaseProviders = [
   {
@@ -40,6 +41,7 @@ export const databaseProviders = [
         JobPortal,
         JobSeeker,
         Disease,
+        AuditLog,
       ]);
 
       await sequelize.sync();

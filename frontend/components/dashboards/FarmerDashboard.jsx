@@ -72,12 +72,14 @@ export function FarmerDashboard() {
           title="Your Active Tasks"
           className="border border-moss/10 shadow-sm bg-white/90"
         >
-          <p className="text-moss">You have {dashboardConfig.stats[0]?.value} active tasks.</p>
+          <p className="text-moss">
+            You have {dashboardConfig.stats[0]?.value} active tasks.
+          </p>
           <Row gutter={[16, 16]} className="mt-4">
             <Col xs={24}>
               <p className="text-sm text-gray-600">
-                Use the quick actions above to manage your tasks and connect with
-                workers.
+                Use the quick actions above to manage your tasks and connect
+                with workers.
               </p>
             </Col>
           </Row>
@@ -87,7 +89,9 @@ export function FarmerDashboard() {
           <Col xs={24} sm={12}>
             <Card className="h-full border border-moss/10 shadow-sm bg-white/90">
               <div className="space-y-2">
-                <p className="text-sm font-semibold text-forest">Your Profile</p>
+                <p className="text-sm font-semibold text-forest">
+                  Your Profile
+                </p>
                 <p className="text-xs text-moss">Signed in as:</p>
                 <p className="text-sm font-medium text-forest">{user?.email}</p>
               </div>
