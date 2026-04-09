@@ -7,6 +7,8 @@ export class CreateUserHasRoleDto {
   @IsNumber()
   userId: number;
 
+  isActive?: boolean;
+
   @IsString()
   contactNumber?: string;
 

@@ -44,6 +44,13 @@ export class UserHasRole extends Model<UserHasRole> {
   // user has role properties
 
   @Column({
+    type: DataType.BOOLEAN,
+    allowNull: false,
+    defaultValue: false,
+  })
+  isActive: boolean;
+
+  @Column({
     type: DataType.STRING,
     allowNull: true,
   })

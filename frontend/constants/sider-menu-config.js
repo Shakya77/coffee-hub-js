@@ -100,5 +100,7 @@ export const siderMenuConfig = {
   ],
 };
 
+import { normalizeRole } from "./index";
+
 export const getSiderMenuForRole = (role) =>
-  siderMenuConfig[role] || siderMenuConfig.farmer;
+  siderMenuConfig[normalizeRole(role)] || siderMenuConfig.farmer;

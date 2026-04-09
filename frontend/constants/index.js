@@ -3,3 +3,7 @@ export const roleOptions = [
   { label: "Vendor", value: "vendor" },
   { label: "Agronomist", value: "agronomist" },
 ];
+
+export function normalizeRole(role) {
+  return role;
+}

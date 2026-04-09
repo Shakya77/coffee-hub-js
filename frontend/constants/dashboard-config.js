@@ -66,5 +66,7 @@ export const dashboardRoleConfigs = {
   },
 };
 
+import { normalizeRole } from "./index";
+
 export const getDashboardRoleConfig = (role) =>
-  dashboardRoleConfigs[role] ?? dashboardRoleConfigs.user;
+  dashboardRoleConfigs[normalizeRole(role)] ?? dashboardRoleConfigs.user;

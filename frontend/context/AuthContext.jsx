@@ -52,6 +52,63 @@ export function AuthProvider({ children }) {
   const [activeRole, setActiveRole] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const refreshRoles = async (preferredRole = null) => {
+    const { data } = await api.get("/auth/roles");
+    const fetchedRoles = data?.roles ?? [];
+
+    if (fetchedRoles.length === 0) {
+      return [];
+    }
+
+    setRoles(fetchedRoles);
+
+    const currentRole =
+      preferredRole || activeRole || localStorage.getItem("activeRole");
+    const roleExists = fetchedRoles.some(
+      (roleItem) => roleItem.slug === currentRole,
+    );
+    const nextRole =
+      (roleExists && currentRole) || fetchedRoles[0]?.slug || currentRole;
+
+    setActiveRole(nextRole || null);
+    if (nextRole) {
+      localStorage.setItem("activeRole", nextRole);
+    }
+
+    return fetchedRoles;
+  };
+
+  const addRoleToCurrentUser = async (roleSlug, details = {}) => {
+    if (!user?.id) {
+      throw new Error("User is not available");
+    }
+
+    const rolesResponse = await api.get("/roles?isActive=true");
+    const availableRoles = Array.isArray(rolesResponse?.data)
+      ? rolesResponse.data
+      : [];
+
+    const targetRole = availableRoles.find((roleItem) => {
+      const slugOrName = (roleItem?.slug || roleItem?.name || "")
+        .toString()
+        .toLowerCase();
+      return slugOrName === roleSlug.toLowerCase();
+    });
+
+    if (!targetRole?.id) {
+      throw new Error(`Role '${roleSlug}' not found`);
+    }
+
+    await api.post("/user-has-roles", {
+      userId: user.id,
+      roleId: targetRole.id,
+      ...details,
+    });
+
+    await refreshRoles(activeRole || roleSlug);
+    return roleSlug;
+  };
+
   useEffect(() => {
     const initializeAuth = async () => {
       const storedToken = localStorage.getItem("token");
@@ -179,6 +236,8 @@ export function AuthProvider({ children }) {
       login,
       logout,
       switchRole,
+      refreshRoles,
+      addRoleToCurrentUser,
     }),
     [token, user, roles, activeRole, loading],
   );

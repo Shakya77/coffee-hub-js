@@ -12,11 +12,18 @@ export class UserHasRolesService {
   ) {}
 
   async create(createUserHasRoleDto: CreateUserHasRoleDto) {
-    const data = await this.userHasRolesRepository.create(
-      createUserHasRoleDto as any as UserHasRole,
-    );
-
+    // Always create with isActive false for requests
+    const data = await this.userHasRolesRepository.create({
+      ...createUserHasRoleDto,
+      isActive: false,
+    } as any as UserHasRole);
     return data;
+  }
+
+  async approve(id: number) {
+    const userHasRole = await this.userHasRolesRepository.findByPk(id);
+    if (!userHasRole) throw new Error('UserHasRole not found');
+    return await userHasRole.update({ isActive: true });
   }
 
   async findAll() {

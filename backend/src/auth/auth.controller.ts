@@ -23,6 +23,7 @@ export class AuthController {
     private usersService: UsersService,
   ) {}
 
+  @Public()
   @Post('login')
   async login(@Body() loginDto: CreateUserDto, @Request() req) {
     const ipAddress =
