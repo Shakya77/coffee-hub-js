@@ -14,6 +14,7 @@ import { UserRole } from './decorators/user-role.decorator';
 import { AllowedRoles } from './decorators/roles.decorator';
 import { RolesGuard } from './guards/roles.guard';
 import { Roles } from 'src/roles/entities/role.entity';
+import { Public } from './decorators/public.decorator';
 
 @Controller('auth')
 export class AuthController {
@@ -31,6 +32,7 @@ export class AuthController {
   }
 
   @Post('/register')
+  @Public()
   async register(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto);
   }

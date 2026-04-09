@@ -1,4 +1,4 @@
-@baseUrl = http://localhost:3000
+@baseUrl = http://localhost:3001
 @authToken = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFkbWluQGNvZmZlZWh1Yi5jb20iLCJpZCI6MSwic2x1ZyI6IkFkbWluLVVzZXIiLCJyb2xlIjoiZmFybWVyIiwicm9sZXMiOlsiZmFybWVyIiwidmVuZG9yIl0sImlhdCI6MTc3NTY3MTEwMH0.ZU8ML0B0G2FxzlVbH9OU4FlD4nDb3lyy4at3itxb234
 
 ### register admin user
