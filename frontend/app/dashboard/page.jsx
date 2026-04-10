@@ -9,7 +9,6 @@ import { AgronomistDashboard } from "@/components/dashboards/AgronomistDashboard
 import { FarmerDashboard } from "@/components/dashboards/FarmerDashboard";
 import { VendorDashboard } from "@/components/dashboards/VendorDashboard";
 import { Forbidden } from "@/components/Forbidden";
-import { useRoleGuard } from "@/hooks/useRoleGuard";
 
 export default function DashboardPage() {
   const { token, loading, activeRole, roles } = useAuth();

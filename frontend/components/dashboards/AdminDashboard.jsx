@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Layout, Menu, Card, Row, Col, Statistic, Button } from "antd";
-import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
 import { getDashboardRoleConfig } from "@/constants/dashboard-config";
 import { getSiderMenuForRole } from "@/constants/sider-menu-config";
 import { DashboardHeader } from "@/components/shared/DashboardHeader";

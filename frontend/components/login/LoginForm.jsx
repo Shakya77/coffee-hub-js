@@ -5,7 +5,7 @@ import { Button, Card, Form, Input, Typography, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import api from "@/lib/api";
 import { useAuth } from "@/context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "../Loader";
 
@@ -14,9 +14,9 @@ const inputIconStyle = { marginInlineEnd: 6 };
 
 export default function LoginForm() {
   const router = useRouter();
-  const { login } = useAuth();
+  const { login, user, loading: authLoading } = useAuth();
   const [form] = Form.useForm();
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const onFinish = async (values) => {
     setLoading(true);
@@ -40,7 +40,14 @@ export default function LoginForm() {
     }
   };
 
-  if (loading) return <Loader />;
+  useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+    setLoading(false);
+  }, [user, router]);
+
+  if (loading || authLoading) return <Loader />;
 
   return (
     <section className="min-h-screen bg-linear-to-b from-sand via-cream to-sand px-4 py-8 sm:py-12">
