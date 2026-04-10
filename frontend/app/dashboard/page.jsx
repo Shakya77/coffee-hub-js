@@ -56,5 +56,6 @@ export default function DashboardPage() {
     }
   };
 
+  // Layout is now handled by layout.jsx, just render the content
   return renderDashboard();
 }
