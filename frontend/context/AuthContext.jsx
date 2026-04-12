@@ -8,7 +8,7 @@ import React, {
   useState,
 } from "react";
 import api from "@/lib/api";
-import { getDashboardRoleConfig } from "@/constants/dashboard-config";
+import { getRoleLabelForRole } from "@/constants/sider-menu-config";
 
 const AuthContext = createContext(null);
 
@@ -37,12 +37,37 @@ function rolesFromToken(decoded) {
   const uniqueTokenRoles = [...new Set(tokenRoles.filter(Boolean))];
   return uniqueTokenRoles.map((slug) => ({
     slug,
-    name: getDashboardRoleConfig(slug).label,
+    name: getRoleLabelForRole(slug),
   }));
 }
 
-export function dashboardForRole(role, _slug) {
-  return role === "admin" ? "/admin" : "/dashboard";
+function sanitizeRouteSegment(value) {
+  return (value || "")
+    .toString()
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9-_]/g, "");
+}
+
+export function getUserRouteSlug(userLike) {
+  const rawSlug =
+    userLike?.slug || userLike?.username || userLike?.userName || userLike?.id;
+
+  return sanitizeRouteSegment(rawSlug);
+}
+
+export function dashboardForRole(role, userSlug) {
+  const normalizedRole = sanitizeRouteSegment(role);
+  const normalizedUserSlug = sanitizeRouteSegment(userSlug);
+
+  const knownRoleRoutes = new Set(["admin", "agronomist", "farmer", "vendor"]);
+
+  if (!knownRoleRoutes.has(normalizedRole) || !normalizedUserSlug) {
+    return "/";
+  }
+
+  return `/${normalizedRole}/${normalizedUserSlug}/dashboard`;
 }
 
 export function AuthProvider({ children }) {
@@ -159,7 +184,7 @@ export function AuthProvider({ children }) {
               ? [
                   {
                     slug: fallbackRole,
-                    name: getDashboardRoleConfig(fallbackRole).label,
+                    name: getRoleLabelForRole(fallbackRole),
                   },
                 ]
               : [],

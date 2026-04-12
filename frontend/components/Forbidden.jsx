@@ -2,14 +2,16 @@
 
 import { Button, Result, Layout } from "antd";
 import { useRouter } from "next/navigation";
-import { useAuth } from "@/context/AuthContext";
-import { getDashboardRoleConfig } from "@/constants/dashboard-config";
+import {
+  dashboardForRole,
+  getUserRouteSlug,
+  useAuth,
+} from "@/context/AuthContext";
 
 export function Forbidden({ requiredRole }) {
   const router = useRouter();
-  const { activeRole } = useAuth();
-  const roleConfig = getDashboardRoleConfig(requiredRole);
-  const activeRoleConfig = getDashboardRoleConfig(activeRole);
+  const { activeRole, user } = useAuth();
+  const userSlug = getUserRouteSlug(user);
 
   return (
     <Layout className="min-h-screen">
@@ -28,15 +30,15 @@ export function Forbidden({ requiredRole }) {
                 Your current active role is:{" "}
                 <span className="font-semibold capitalize">{activeRole}</span>
               </p>
-              {roleConfig && (
-                <p className="mt-2 text-sm text-gray-600">
-                  {roleConfig.subtitle}
-                </p>
-              )}
             </>
           }
           extra={
-            <Button type="primary" onClick={() => router.push("/dashboard")}>
+            <Button
+              type="primary"
+              onClick={() =>
+                router.push(dashboardForRole(activeRole, userSlug))
+              }
+            >
               Return to Dashboard
             </Button>
           }

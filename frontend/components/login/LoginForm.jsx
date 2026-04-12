@@ -4,7 +4,11 @@ import Link from "next/link";
 import { Button, Card, Form, Input, Typography, message } from "antd";
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import api from "@/lib/api";
-import { useAuth } from "@/context/AuthContext";
+import {
+  dashboardForRole,
+  getUserRouteSlug,
+  useAuth,
+} from "@/context/AuthContext";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Loader from "../Loader";
@@ -26,9 +30,13 @@ export default function LoginForm() {
       if (data?.access_token) {
         const decoded = await login(data.access_token);
         if (decoded) {
+          const roleFromStorage = localStorage.getItem("activeRole");
+          const role = roleFromStorage || decoded?.role || decoded?.roles?.[0];
+          const userSlug = getUserRouteSlug(decoded);
+
           message.success("Welcome back!");
           form.resetFields();
-          router.push("/dashboard");
+          router.push(dashboardForRole(role, userSlug));
         }
       } else {
         router.push("/");
@@ -42,7 +50,10 @@ export default function LoginForm() {
 
   useEffect(() => {
     if (user) {
-      router.push("/dashboard");
+      const roleFromStorage = localStorage.getItem("activeRole");
+      const role = roleFromStorage || user?.role || user?.roles?.[0];
+      const userSlug = getUserRouteSlug(user);
+      router.push(dashboardForRole(role, userSlug));
     }
     setLoading(false);
   }, [user, router]);

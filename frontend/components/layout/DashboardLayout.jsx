@@ -3,17 +3,17 @@
 import { useState } from "react";
 import { Layout, Menu } from "antd";
 import { DashboardHeader } from "@/components/shared/DashboardHeader";
-import { useAuth } from "@/context/AuthContext";
+import { getUserRouteSlug, useAuth } from "@/context/AuthContext";
 import { getSiderMenuForRole } from "@/constants/sider-menu-config";
 
 const { Content, Sider } = Layout;
 
-export default function DashboardLayout({ children }) {
+export function DashboardLayout({ children }) {
   const [collapsed, setCollapsed] = useState(false);
-  const { activeRole, roles } = useAuth();
+  const { activeRole, user } = useAuth();
+  const userSlug = getUserRouteSlug(user);
 
-  const role = activeRole || roles?.[0]?.slug || "user";
-  const siderMenu = getSiderMenuForRole(role);
+  const siderMenu = getSiderMenuForRole(activeRole, userSlug);
 
   return (
     <Layout className="">
@@ -29,12 +29,7 @@ export default function DashboardLayout({ children }) {
         <div className="flex items-center justify-center gap-2 p-4">
           <span className="text-sm font-semibold text-forest">Menu</span>
         </div>
-        <Menu
-          mode="inline"
-          defaultSelectedKeys={["dashboard"]}
-          items={siderMenu}
-          className="border-r-0"
-        />
+        <Menu mode="inline" items={siderMenu} className="border-r-0" />
       </Sider>
       <Layout className="min-h-screen">
         <DashboardHeader collapsed={collapsed} setCollapsed={setCollapsed} />

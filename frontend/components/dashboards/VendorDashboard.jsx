@@ -1,26 +1,33 @@
 "use client";
 
 import { Card, Row, Col, Statistic, Button } from "antd";
-import { getDashboardRoleConfig } from "@/constants/dashboard-config";
 import { useAuth } from "@/context/AuthContext";
+
+const vendorStats = [
+  { label: "Available Jobs", value: "15" },
+  { label: "Applied Jobs", value: "5" },
+  { label: "Completed Tasks", value: "42" },
+  { label: "Saved Jobs", value: "6" },
+];
+
+const vendorActions = ["Browse Jobs", "My Applications", "My Profile"];
 
 export function VendorDashboard() {
   const { user } = useAuth();
-  const dashboardConfig = getDashboardRoleConfig("vendor");
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="mb-2 text-3xl font-semibold text-forest">
-          {dashboardConfig.title}
+          Vendor Dashboard
         </h1>
         <p className="max-w-2xl text-base text-moss">
-          {dashboardConfig.subtitle}
+          Browse opportunities and manage your active applications.
         </p>
       </div>
 
       <Row gutter={[16, 16]} className="mb-8">
-        {dashboardConfig.stats.map((stat) => (
+        {vendorStats.map((stat) => (
           <Col xs={24} sm={12} lg={6} key={stat.label}>
             <Card className="h-full border border-moss/10 shadow-sm">
               <Statistic title={stat.label} value={stat.value} />
@@ -34,7 +41,7 @@ export function VendorDashboard() {
         className="mb-8 border border-moss/10 shadow-sm"
       >
         <div className="flex flex-wrap gap-3">
-          {dashboardConfig.actions.map((action) => (
+          {vendorActions.map((action) => (
             <Button key={action} type="primary" size="large">
               {action}
             </Button>
@@ -47,7 +54,7 @@ export function VendorDashboard() {
         className="mb-8 border border-moss/10 shadow-sm"
       >
         <p className="text-moss">
-          You have {dashboardConfig.stats[0]?.value} available opportunities.
+          You have {vendorStats[0]?.value} available opportunities.
         </p>
         <Row gutter={[16, 16]} className="mt-4">
           <Col xs={24}>
@@ -73,7 +80,7 @@ export function VendorDashboard() {
             <div className="space-y-2">
               <p className="text-sm font-semibold text-forest">Stats</p>
               <p className="text-xs text-moss">
-                Completed: {dashboardConfig.stats[2]?.value || "42"} tasks
+                Completed: {vendorStats[2]?.value || "42"} tasks
               </p>
               <p className="text-xs text-moss">Rating: ⭐⭐⭐⭐⭐</p>
             </div>

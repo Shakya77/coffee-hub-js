@@ -28,7 +28,6 @@ export class AuthService {
     const check = await this.usersService.findOneEmail(user.email);
 
     if (!check) {
-      // Log failed login attempt
       if (this.auditLogsService) {
         await this.auditLogsService.logFailedLogin(
           user.email,

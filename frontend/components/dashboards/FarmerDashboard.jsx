@@ -1,26 +1,37 @@
 "use client";
 
 import { Card, Row, Col, Statistic, Button } from "antd";
-import { getDashboardRoleConfig } from "@/constants/dashboard-config";
 import { useAuth } from "@/context/AuthContext";
+
+const farmerStats = [
+  { label: "Active Tasks", value: "3" },
+  { label: "Pending Applications", value: "7" },
+  { label: "Resources Available", value: "12" },
+  { label: "Draft Posts", value: "4" },
+];
+
+const farmerActions = [
+  "Post New Task",
+  "View Applications",
+  "Browse Resources",
+];
 
 export function FarmerDashboard() {
   const { user } = useAuth();
-  const dashboardConfig = getDashboardRoleConfig("farmer");
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="mb-2 text-3xl font-semibold text-forest">
-          {dashboardConfig.title}
+          Farmer Dashboard
         </h1>
         <p className="max-w-2xl text-base text-moss">
-          {dashboardConfig.subtitle}
+          Post tasks, review applications, and connect with workers.
         </p>
       </div>
 
       <Row gutter={[16, 16]} className="mb-8">
-        {dashboardConfig.stats.map((stat) => (
+        {farmerStats.map((stat) => (
           <Col xs={24} sm={12} lg={6} key={stat.label}>
             <Card className="h-full border border-moss/10 shadow-sm">
               <Statistic title={stat.label} value={stat.value} />
@@ -34,7 +45,7 @@ export function FarmerDashboard() {
         className="mb-8 border border-moss/10 shadow-sm"
       >
         <div className="flex flex-wrap gap-3">
-          {dashboardConfig.actions.map((action) => (
+          {farmerActions.map((action) => (
             <Button key={action} type="primary" size="large">
               {action}
             </Button>
@@ -47,7 +58,7 @@ export function FarmerDashboard() {
         className="mb-8 border border-moss/10 shadow-sm"
       >
         <p className="text-moss">
-          You have {dashboardConfig.stats[0]?.value} active tasks.
+          You have {farmerStats[0]?.value} active tasks.
         </p>
         <Row gutter={[16, 16]} className="mt-4">
           <Col xs={24}>

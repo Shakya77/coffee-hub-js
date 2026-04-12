@@ -1,26 +1,33 @@
 "use client";
 
 import { Card, Row, Col, Statistic, Button } from "antd";
-import { getDashboardRoleConfig } from "@/constants/dashboard-config";
 import { useAuth } from "@/context/AuthContext";
+
+const adminStats = [
+  { label: "Total Users", value: "1,234" },
+  { label: "Active Roles", value: "4" },
+  { label: "Transactions", value: "456" },
+  { label: "Pending Reviews", value: "12" },
+];
+
+const adminActions = ["Manage Users", "View Reports", "System Settings"];
 
 export function AdminDashboard() {
   const { user } = useAuth();
-  const dashboardConfig = getDashboardRoleConfig("admin");
 
   return (
     <div>
       <div className="mb-8">
         <h1 className="mb-2 text-3xl font-semibold text-forest">
-          {dashboardConfig.title}
+          Admin Dashboard
         </h1>
         <p className="max-w-2xl text-base text-moss">
-          {dashboardConfig.subtitle}
+          Oversee users, roles, content, and platform health.
         </p>
       </div>
 
       <Row gutter={[16, 16]} className="mb-8">
-        {dashboardConfig.stats.map((stat) => (
+        {adminStats.map((stat) => (
           <Col xs={24} sm={12} lg={6} key={stat.label}>
             <Card className="h-full border border-moss/10 shadow-sm">
               <Statistic title={stat.label} value={stat.value} />
@@ -36,7 +43,7 @@ export function AdminDashboard() {
             className="h-full border border-moss/10 shadow-sm"
           >
             <div className="flex flex-wrap gap-3">
-              {dashboardConfig.actions.map((action) => (
+              {adminActions.map((action) => (
                 <Button key={action} type="primary">
                   {action}
                 </Button>
@@ -52,9 +59,7 @@ export function AdminDashboard() {
             <div className="space-y-3 text-sm text-moss">
               <p>
                 Signed in as{" "}
-                <span className="font-medium text-forest">
-                  {user?.email}
-                </span>
+                <span className="font-medium text-forest">{user?.email}</span>
               </p>
               <p>
                 Role:{" "}
