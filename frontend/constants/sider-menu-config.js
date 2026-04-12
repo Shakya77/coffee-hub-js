@@ -15,7 +15,6 @@ export const roleLabelConfig = {
   agronomist: "Agronomist",
   farmer: "Farmer",
   vendor: "Vendor",
-  user: "User",
 };
 
 function getItem(label, key, icon, children) {
@@ -31,7 +30,7 @@ function makeRolePath(role, userSlug, path) {
   if (!role || !userSlug) {
     return "/";
   }
-
+  console.log(`\n\n\n/${role}/${userSlug}/${path}\n\n\n`);
   return `/${role}/${userSlug}/${path}`;
 }
 

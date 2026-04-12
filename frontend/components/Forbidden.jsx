@@ -22,7 +22,7 @@ export function Forbidden({ requiredRole }) {
           subTitle={
             <>
               <p className="mb-2">
-                You don't have access to the{" "}
+                You don&apos;t have access to the{" "}
                 <span className="font-semibold capitalize">{requiredRole}</span>{" "}
                 dashboard.
               </p>

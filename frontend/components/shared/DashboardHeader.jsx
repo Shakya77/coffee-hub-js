@@ -1,6 +1,6 @@
 "use client";
 
-import { Layout, Button, theme, Avatar, Dropdown } from "antd";
+import { Layout, Button, theme, Dropdown } from "antd";
 import {
   LogoutOutlined,
   MenuFoldOutlined,
@@ -104,7 +104,12 @@ export function DashboardHeader({ collapsed, setCollapsed }) {
         padding: 0,
         background: colorBgContainer,
         borderBottom: `1px solid ${colorBorderSecondary}`,
+        position: "sticky",
+        top: 0, // 👈 REQUIRED
+        zIndex: 1000, // 👈 ensures it stays above content
+        width: "100%", // 👈 avoids layout shift
       }}
+
     >
       <div className="flex items-center justify-between h-full px-4">
         <div className="flex items-center gap-4">
