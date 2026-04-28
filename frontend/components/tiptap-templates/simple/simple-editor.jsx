@@ -100,7 +100,12 @@ function detectJargonTerms(editorText) {
   });
 }
 
-const MainToolbarContent = ({ onHighlighterClick, onLinkClick, isMobile }) => {
+const MainToolbarContent = ({
+  onHighlighterClick,
+  onLinkClick,
+  isMobile,
+  showThemeToggle,
+}) => {
   return (
     <>
       <Spacer />
@@ -150,9 +155,11 @@ const MainToolbarContent = ({ onHighlighterClick, onLinkClick, isMobile }) => {
       </ToolbarGroup>
       <Spacer />
       {isMobile && <ToolbarSeparator />}
-      <ToolbarGroup>
-        <ThemeToggle />
-      </ToolbarGroup>
+      {showThemeToggle && (
+        <ToolbarGroup>
+          <ThemeToggle />
+        </ToolbarGroup>
+      )}
     </>
   );
 };
@@ -180,7 +187,7 @@ const MobileToolbarContent = ({ type, onBack }) => (
   </>
 );
 
-export function SimpleEditor() {
+export function SimpleEditor({ showThemeToggle = true } = {}) {
   const isMobile = useIsBreakpoint();
   const { height } = useWindowSize();
   const [mobileView, setMobileView] = useState("main");
@@ -313,110 +320,109 @@ export function SimpleEditor() {
   }, [editor, syncJargonDictionary]);
 
   return (
-    <div className="simple-editor-wrapper">
-      <EditorContext.Provider value={{ editor }}>
-        <Toolbar
-          ref={toolbarRef}
-          style={{
-            ...(isMobile
-              ? {
-                  bottom: `calc(100% - ${height - rect.y}px)`,
-                }
-              : {}),
-          }}
-        >
-          {mobileView === "main" ? (
-            <MainToolbarContent
-              onHighlighterClick={() => setMobileView("highlighter")}
-              onLinkClick={() => setMobileView("link")}
-              isMobile={isMobile}
-            />
+    <EditorContext.Provider value={{ editor }}>
+      <Toolbar
+        ref={toolbarRef}
+        style={{
+          ...(isMobile
+            ? {
+                bottom: `calc(100% - ${height - rect.y}px)`,
+              }
+            : {}),
+        }}
+      >
+        {mobileView === "main" ? (
+          <MainToolbarContent
+            onHighlighterClick={() => setMobileView("highlighter")}
+            onLinkClick={() => setMobileView("link")}
+            isMobile={isMobile}
+            showThemeToggle={showThemeToggle}
+          />
+        ) : (
+          <MobileToolbarContent
+            type={mobileView === "highlighter" ? "highlighter" : "link"}
+            onBack={() => setMobileView("main")}
+          />
+        )}
+      </Toolbar>
+
+      <EditorContent
+        editor={editor}
+        role="presentation"
+        className="simple-editor-content"
+      />
+
+      <button
+        type="button"
+        className="jargon-dictionary-trigger"
+        onClick={() => setIsDictionaryOpen(true)}
+      >
+        Open Dictionary{" "}
+        {detectedJargons.length > 0 ? `(${detectedJargons.length})` : ""}
+      </button>
+
+      <Drawer
+        title="Jargon Dictionary"
+        placement="right"
+        size={380}
+        open={isDictionaryOpen}
+        onClose={() => setIsDictionaryOpen(false)}
+      >
+        <div className="jargon-drawer-content">
+          <Input
+            allowClear
+            size="large"
+            placeholder="Search jargon or meaning..."
+            value={jargonSearch}
+            onChange={(event) => setJargonSearch(event.target.value)}
+          />
+
+          {visibleJargons.length === 0 ? (
+            <Empty description="No jargon found for this search" />
           ) : (
-            <MobileToolbarContent
-              type={mobileView === "highlighter" ? "highlighter" : "link"}
-              onBack={() => setMobileView("main")}
-            />
-          )}
-        </Toolbar>
-
-        <EditorContent
-          editor={editor}
-          role="presentation"
-          className="simple-editor-content"
-        />
-
-        <button
-          type="button"
-          className="jargon-dictionary-trigger"
-          onClick={() => setIsDictionaryOpen(true)}
-        >
-          Open Dictionary{" "}
-          {detectedJargons.length > 0 ? `(${detectedJargons.length})` : ""}
-        </button>
-
-        <Drawer
-          title="Jargon Dictionary"
-          placement="right"
-          size={380}
-          open={isDictionaryOpen}
-          onClose={() => setIsDictionaryOpen(false)}
-        >
-          <div className="jargon-drawer-content">
-            <Input
-              allowClear
-              size="large"
-              placeholder="Search jargon or meaning..."
-              value={jargonSearch}
-              onChange={(event) => setJargonSearch(event.target.value)}
-            />
-
-            {visibleJargons.length === 0 ? (
-              <Empty description="No jargon found for this search" />
-            ) : (
-              visibleJargons.map((jargon) => (
-                <div key={jargon.term} className="jargon-card">
-                  <div className="jargon-card-header">
-                    <div className="jargon-term-wrap">
-                      <strong>{jargon.term}</strong>
-                      {detectedJargons.some(
-                        (item) => item.term === jargon.term,
-                      ) ? (
-                        <Tag color="blue">Detected</Tag>
-                      ) : null}
-                    </div>
-                    <a
-                      href={jargon.href}
-                      target="_blank"
-                      rel="noopener noreferrer nofollow"
-                    >
-                      Source
-                    </a>
+            visibleJargons.map((jargon) => (
+              <div key={jargon.term} className="jargon-card">
+                <div className="jargon-card-header">
+                  <div className="jargon-term-wrap">
+                    <strong>{jargon.term}</strong>
+                    {detectedJargons.some(
+                      (item) => item.term === jargon.term,
+                    ) ? (
+                      <Tag color="blue">Detected</Tag>
+                    ) : null}
                   </div>
-
-                  <p>{jargon.meaning}</p>
-
-                  <div className="jargon-actions">
-                    <button
-                      type="button"
-                      onClick={() => copyJargonMarkup(jargon)}
-                    >
-                      {copiedTerm === jargon.term
-                        ? "Copied"
-                        : "Copy Link Snippet"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => insertJargonMarkup(jargon)}
-                    >
-                      Insert as Link
-                    </button>
-                  </div>
+                  <a
+                    href={jargon.href}
+                    target="_blank"
+                    rel="noopener noreferrer nofollow"
+                  >
+                    Source
+                  </a>
                 </div>
-              ))
-            )}
-          </div>
-        </Drawer>
-      </EditorContext.Provider>
-    </div>
+
+                <p>{jargon.meaning}</p>
+
+                <div className="jargon-actions">
+                  <button
+                    type="button"
+                    onClick={() => copyJargonMarkup(jargon)}
+                  >
+                    {copiedTerm === jargon.term
+                      ? "Copied"
+                      : "Copy Link Snippet"}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => insertJargonMarkup(jargon)}
+                  >
+                    Insert as Link
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </Drawer>
+    </EditorContext.Provider>
   );
 }

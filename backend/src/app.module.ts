@@ -48,10 +48,7 @@ import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
       provide: APP_GUARD,
       useClass: JwtAuthGuard,
     },
-    {
-      provide: APP_GUARD,
-      useClass: RolesGuard,
-    },
+
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,

@@ -11,12 +11,12 @@ const poppins = Poppins({
 
 export const metadata = {
   title: "Coffee Hub",
-  description: "Your one-stop shop for all things coffee",
+  description: "Your one-stop solutions for all things coffee",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en" className={`${poppins.variable} h-full antialiased`}>
+    <html lang="en" className={`${poppins.variable} h-full`}>
       <body className="min-h-full flex flex-col font-sans">
         <AuthProvider>
           <AntdRegistry>{children}</AntdRegistry>
